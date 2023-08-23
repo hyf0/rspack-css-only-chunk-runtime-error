@@ -16,7 +16,14 @@ const config = {
   mode: "development",
   devtool: false,
   entry: {
-    main: "./src/index",
+    main: {
+      import: "./src/index",
+      runtime: "build-runtime",
+    },
+    main2: {
+      import: "./src/index2",
+      runtime: "build-runtime",
+    }
   },
   plugins: [
     ...(isRunningWebpack ? [
@@ -34,6 +41,19 @@ const config = {
       ? path.resolve(__dirname, "webpack-dist")
       : path.resolve(__dirname, "rspack-dist"),
     filename: "[name].js",
+  },
+  optimization: {
+    runtimeChunk: true,
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'all',
+          test: /render\.css/,
+          enforce: true,
+          name: 'vendor'
+        },
+      }
+    }
   },
   experiments: {
     css: true,
